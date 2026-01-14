@@ -27,3 +27,9 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t mlops-test .
+
+      - name: Run container
+        run: |
+          docker run -d -p 8000:8000 --name test-container mlops-test
+          sleep 5
+          curl http://localhost:8000/health
