@@ -1,5 +1,4 @@
 import logging
-import not_exist_module
 from fastapi import FastAPI, HTTPException
 from app.schema import PredictInput
 from app.model import predict_logic
