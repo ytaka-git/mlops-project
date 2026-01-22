@@ -1,0 +1,27 @@
+{
+  "family": "mlops-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::067270456782:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "mlops-api",
+      "image": "067270456782.dkr.ecr.ap-northeast-1.amazonaws.com/mlops-api:latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 8000, "protocol": "tcp" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mlops-task",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      }
+    }
+  ]
+}
