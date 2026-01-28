@@ -2,6 +2,11 @@ name: Deploy to ECS
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - "**/*.md"
+      - ".gitignore"
+      - ".dockerignore"
+      - "LICENSE"
 
 permissions:
   contents: read
