@@ -12,7 +12,7 @@ def main():
         [1.0, 0.0],
         [1.0, 1.0],
     ])
-    y = np.array([0, 0, 1, 1])
+    y = np.array([0, 0, 0, 1])
 
     model = LogisticRegression()
     model.fit(X, y)
