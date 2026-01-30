@@ -7,6 +7,7 @@ from typing import List
 import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+import hashlib
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,9 +24,20 @@ _model = None
 class PredictRequest(BaseModel):
     features: List[float] = Field(..., min_length=2)
 
+def file_sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()[:12]  # 短縮表示
+
 @app.get("/health")
 def health():
-    return {"status":"ok", "version": "v3"}
+    return {
+        "status": "ok",
+        "model_file_exists": MODEL_PATH.exists(),
+        "model_version": file_sha256(MODEL_PATH) if MODEL_PATH.exists() else None
+    }
 
 def get_model():
     global _model
@@ -43,4 +55,5 @@ def predict(req: PredictRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"bad input: {e}")
     pred = int(proba_1 >= 0.5)
-    return {"pred": pred, "proba_1": proba_1}
+    return {"pred": pred, "proba_1": proba_1, "model_version": file_sha256(MODEL_PATH)}
+
