@@ -18,11 +18,16 @@ GitHub Actions → Amazon ECR → Amazon ECS(Fargate) へ
 
 を目的に構築しています。
 
+## 詳細ドキュメント
+- [アーキテクチャ詳細](./ARCHITECTURE.md)
+- [運用・トラブルシューティング](./RUNBOOK.md)
+
 ## 提供機能
-- 推論 API（FastAPI）
+- 学習済みモデルを使った推論 API（FastAPI）
 - /health による起動・デプロイ確認
 - GitHub Actions による自動デプロイ
-- 推論ログの構造化出力（CloudWatch Logs）
+- モデル更新時の差し替え・ロールバック
+- 推論入力・出力を JSON ログとして保存（CloudWatch Logs）
 
 ## 技術スタック
 - 言語：Python
@@ -33,14 +38,9 @@ GitHub Actions → Amazon ECR → Amazon ECS(Fargate) へ
 - 実行環境：Amazon ECS (Fargate)
 - レジストリ：Amazon ECR
 - ログ：CloudWatch Logs
-
-## できること
-- 学習済みモデルを使った推論APIの提供
-- GitHub Actionsによる自動デプロイ
-- モデル更新時の差し替え・ロールバック
-- 推論入力・出力をJSONログとして保存
 ---
 ## 全体フロー
+学習からデプロイまでの全体の流れは以下の通りです。
 1. train.py で学習し model.joblib を生成
 2. Docker イメージにモデルとAPIを同梱
 3. main ブランチに push
@@ -74,8 +74,6 @@ ECR（特定リポジトリ）
 ECS（TaskDefinition / Service 更新）
 
 iam:PassRole（ecs-tasks.amazonaws.com 限定）
-
-## 補足
 
 ## スコープ外
 本構成は学習・検証目的のため、以下は最小限としています。
