@@ -50,24 +50,6 @@ GitHub Actions → Amazon ECR → Amazon ECS(Fargate) へ
 
 ※ README などのドキュメント変更のみの場合は  
 **デプロイは実行されない**よう制御しています。
-## 構成図（論理）
-
-Developer
-  |
-  | git push (main)
-  v
-GitHub Actions
-  |
-  | Docker build / push
-  v
-Amazon ECR
-  |
-  | Task Definition 更新
-  v
-Amazon ECS (Fargate)
-  |
-  v
-/health で起動確認
 
 ## エンドポイント
 
