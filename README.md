@@ -63,17 +63,12 @@ GitHub Actions → Amazon ECR → Amazon ECS(Fargate) へ
 
 ## IAM 権限設計
 
-GitHub Actions 用 IAM ユーザーを作成
-
-AdministratorAccess 不使用
-
-必要最小限の権限のみ付与
-
-ECR（特定リポジトリ）
-
-ECS（TaskDefinition / Service 更新）
-
-iam:PassRole（ecs-tasks.amazonaws.com 限定）
+- GitHub Actions 用 IAM ユーザーを作成
+- AdministratorAccess 不使用
+- 必要最小限の権限のみ付与
+- ECR（特定リポジトリ）
+- ECS（TaskDefinition / Service 更新）
+- iam:PassRole（ecs-tasks.amazonaws.com 限定）
 
 ## スコープ外
 本構成は学習・検証目的のため、以下は最小限としています。
