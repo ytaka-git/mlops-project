@@ -1,4 +1,7 @@
 import logging
+import json
+import time
+import uuid
 from fastapi import FastAPI, HTTPException
 from app.schema import PredictInput
 from app.model import predict_logic
@@ -8,14 +11,16 @@ import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 import hashlib
+import sys
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(message)s"
-)
+logger = logging.getLogger("predict")
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter("%(message)s")
+handler.setFormatter(formatter)
 
-logger = logging.getLogger(__name__)
-
+logger.handlers = [handler]
+logger.propagate = False
 app = FastAPI()
 
 MODEL_PATH = Path(__file__).resolve().parents[1] / "model" / "model.joblib"
@@ -55,5 +60,16 @@ def predict(req: PredictRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"bad input: {e}")
     pred = int(proba_1 >= 0.5)
+
+    log = {
+        "request_id": str(uuid.uuid4()),
+        "ts": int(time.time()),
+        "features": req.features,
+        "pred": pred,
+        "proba_1": proba_1,
+        "model_version": file_sha256(MODEL_PATH),
+    }
+    logger.info(json.dumps(log))
+
     return {"pred": pred, "proba_1": proba_1, "model_version": file_sha256(MODEL_PATH)}
 
