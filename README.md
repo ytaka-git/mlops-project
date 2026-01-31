@@ -67,6 +67,7 @@ GitHub Actions 用 IAM ユーザーを作成し以下の必要最小限の権限
 - ECR（特定リポジトリ）
 - ECS（TaskDefinition / Service 更新）
 - iam:PassRole（ecs-tasks.amazonaws.com 限定）
+
 ※AdministratorAccess 不使用
 
 ## スコープ外
